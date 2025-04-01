@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../providers/AuthProvider";
 
 const Navbar = () => {
     // const { user, logout } = useAuth();
+    const { user, logOut } = useContext(AuthContext);
     const normalLink = "lg:font-bold lg:text-lg lg:mr-2 mt-2 lg:mt-0 text-[#8B4513] hover:text-[#E7B10A]";
     const activeLink = `bg-[#E7B10A] text-[#FFFFFF] border-none hover:bg-transparent focus:bg-transparent focus:text-[#E7B10A] ${normalLink}`;
     return (
@@ -62,7 +65,7 @@ const Navbar = () => {
                 {user ? (
                   <li className="md:hidden">
                     <button
-                      onClick={logout}
+                      onClick={logOut}
                       className="btn mt-4 bg-[#C1440E] text-white font-bold hover:bg-[#A13609]"
                     >
                       Logout
@@ -157,7 +160,7 @@ const Navbar = () => {
                   </ul>
                 </div>
                 <button
-                  onClick={logout}
+                  onClick={logOut}
                   className="btn mt-1 bg-[#C1440E] text-white font-bold hover:bg-[#A13609] hidden md:flex"
                 >
                   Logout
