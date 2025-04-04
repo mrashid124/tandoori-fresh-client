@@ -5,7 +5,9 @@ import {
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
-import MainLayout from "../layout/Mainlayout";
+
+import MainLayout from "../layout/MainLayout";
+
 // import '';
 
   const router = createBrowserRouter([
@@ -18,6 +20,10 @@ import MainLayout from "../layout/Mainlayout";
         {
             path: '/',
             element: <Home></Home>,
+        },
+        {
+          path: "/allfoods",
+          element: <h2> All foods component</h2>,
         },
         {
           path: "/login",
