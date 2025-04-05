@@ -20,6 +20,7 @@ import MainLayout from "../layout/MainLayout";
         {
             path: '/',
             element: <Home></Home>,
+            loader: () => fetch('http://localhost:5000/allFoods')
         },
         {
           path: "/allfoods",

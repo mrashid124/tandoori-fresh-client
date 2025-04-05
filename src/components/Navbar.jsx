@@ -1,10 +1,11 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
+import useAuth from "../Hooks/useAuth";
 
 const Navbar = () => {
-    // const { user, logout } = useAuth();
-    const { user, logOut } = useContext(AuthContext);
+    const { user, logOut } = useAuth();
+    // const { user, logOut } = useContext(AuthContext);
     const normalLink = "lg:font-bold lg:text-lg lg:mr-2 mt-2 lg:mt-0 text-[#8B4513] hover:text-[#E7B10A]";
     const activeLink = `bg-[#E7B10A] text-[#FFFFFF] border-none hover:bg-transparent focus:bg-transparent focus:text-[#E7B10A] ${normalLink}`;
     return (
