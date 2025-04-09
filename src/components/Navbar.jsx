@@ -1,11 +1,11 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
-// import useAuth from "../Hooks/useAuth";
+import useAuth from "../Hooks/useAuth";
 
 const Navbar = () => {
-    // const { user, logOut } = useAuth();
-    const { user, logOut } = useContext(AuthContext);
+    const { user, logOut } = useAuth() || {};
+    // const { user, logOut } = useContext(AuthContext);
     const normalLink = "lg:font-bold lg:text-lg lg:mr-2 mt-2 lg:mt-0 text-[#8B4513] hover:text-[#E7B10A]";
     const activeLink = `bg-[#E7B10A] text-[#FFFFFF] border-none hover:bg-transparent focus:bg-transparent focus:text-[#E7B10A] ${normalLink}`;
     return (
@@ -146,7 +146,7 @@ const Navbar = () => {
                     tabIndex={0}
                     className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
                   >
-                    <li>
+                    {/* <li>
                       <Link to="/myaddedfoods">My added food Items</Link>
                     </li>
                     <li>
@@ -157,7 +157,7 @@ const Navbar = () => {
                     </li>
                     <li>
                       <Link to="/updateprofile">Update Profile</Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
                 <button
@@ -185,3 +185,4 @@ const Navbar = () => {
   };
   
   export default Navbar;
+  

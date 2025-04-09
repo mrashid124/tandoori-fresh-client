@@ -4,7 +4,8 @@ import Banner from '../../components/Banner';
 const Home = () => {
     return (
         <div>
-            <Banner></Banner>
+            <h2>Banner</h2>
+            {/* <Banner></Banner> */}
         </div>
     );
 };

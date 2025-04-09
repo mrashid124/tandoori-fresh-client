@@ -1,131 +1,144 @@
-import { useState, useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../providers/AuthProvider";
-import { toast, ToastContainer } from "react-toastify";
-import { PiEyeBold, PiEyeSlashFill } from "react-icons/pi";
-
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
+// import { Helmet } from "react-helmet-async";
+import regImg from "../assets/Images/loginImg.png"; 
+import useAuth from "../Hooks/useAuth";
+import toast, { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from "react-helmet";
 
 const Register = () => {
-  const { createUser } = useContext(AuthContext);
-  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectPath = location?.state || "/";
+  const [showPassword, setShowPassword] = useState(false);
+  const { createUserWithEmail, updateUser } = useAuth() || {};
 
-  useEffect(() => {
-    document.title = "Register | TandooriFresh";
-  }, []);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const photo = form.photo.value;
-    const password = form.password.value;
-
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters long.", { position: "top-center" });
-      return;
-    }
-    if (!/[A-Z]/.test(password)) {
-      toast.error("Password must contain at least one uppercase letter.", { position: "top-center" });
-      return;
-    }
-    if (!/[a-z]/.test(password)) {
-      toast.error("Password must contain at least one lowercase letter.", { position: "top-center" });
-      return;
-    }
-
-    try {
-      await createUser(email, password, name, photo);
-      toast.success("Registration Successful!", { position: "top-center" });
-      
-      setTimeout(() => navigate("/allfoods"), 1500);
-    } catch (error) {
-      toast.error(error.message || "Registration failed.", { position: "top-center" });
-    }
+  const onSubmit = (data) => {
+    const { name, email, password, photo } = data;
+    createUserWithEmail(email, password, toast)
+      .then(() => {
+        updateUser(name, photo);
+        fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then(() => {
+            navigate(redirectPath);
+          });
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#FAF3E0] px-4">
-      <ToastContainer />
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md border border-[#8B4513]">
-        <h2 className="text-[#C1440E] text-3xl font-bold text-center mb-2">
-          Join TandooriFresh
-        </h2>
-        <p className="text-[#8B4513] text-center mb-6">Create your account to explore the best flavors!</p>
+    <div
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{
+        backgroundImage: `linear-gradient(180deg,rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url(${regImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <Helmet>
+        <title>TandooriFresh | Register</title>
+      </Helmet>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+      <div className="w-full max-w-xl bg-white/10 backdrop-blur-md text-white p-8 rounded-2xl shadow-2xl">
+        <h2 className="text-3xl md:text-4xl font-bold mb-2 text-center">Register</h2>
+        <p className="text-center text-base opacity-80 mb-8">
+          Create your TandooriFresh account
+        </p>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Name */}
           <div>
-            <label className="block text-[#8B4513] font-medium">Name</label>
-            <input 
-              type="text" 
-              name="name" 
-              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C1440E]" 
-              placeholder="Enter your name" 
-              required 
+            <label className="block mb-1 text-sm font-medium">Full Name</label>
+            <input
+              {...register("name", { required: true })}
+              type="text"
+              placeholder="Enter your full name"
+              className="w-full input input-bordered bg-transparent placeholder:text-white"
             />
-          </div>
-          <div>
-            <label className="block text-[#8B4513] font-medium">Email</label>
-            <input 
-              type="email" 
-              name="email" 
-              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C1440E]" 
-              placeholder="Enter your email" 
-              required 
-            />
-          </div>
-          <div>
-            <label className="block text-[#8B4513] font-medium">Photo URL</label>
-            <input 
-              type="text" 
-              name="photo" 
-              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C1440E]" 
-              placeholder="Enter your photo URL" 
-            />
-          </div>
-          <div>
-            <label className="block text-[#8B4513] font-medium">Password</label>
-            <div className="relative">
-              <input 
-                type={passwordVisible ? "text" : "password"} 
-                name="password" 
-                className="w-full p-3 border rounded-md focus:ring-2 focus:ring-[#C1440E]" 
-                placeholder="Create a password" 
-                required 
-              />
-              <button 
-                type="button" 
-                onClick={togglePasswordVisibility} 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xl text-gray-700"
-              >
-                {passwordVisible ? <PiEyeSlashFill /> : <PiEyeBold />}
-              </button>
-            </div>
+            {errors.name && <p className="text-red-400 text-sm mt-1">Full name is required</p>}
           </div>
 
-          <button 
-            type="submit" 
-            className="w-full bg-[#C1440E] text-white py-3 rounded-lg font-bold hover:bg-[#A13609] transition duration-300"
+          {/* Email */}
+          <div>
+            <label className="block mb-1 text-sm font-medium">Email</label>
+            <input
+              {...register("email", { required: true })}
+              type="email"
+              placeholder="you@example.com"
+              className="w-full input input-bordered bg-transparent placeholder:text-white"
+            />
+            {errors.email && <p className="text-red-400 text-sm mt-1">Email is required</p>}
+          </div>
+
+          {/* Photo URL */}
+          <div>
+            <label className="block mb-1 text-sm font-medium">Photo URL</label>
+            <input
+              {...register("photoURL", { required: true })}
+              type="url"
+              placeholder="Paste your photo URL"
+              className="w-full input input-bordered bg-transparent placeholder:text-white"
+            />
+            {errors.photo && <p className="text-red-400 text-sm mt-1">Photo URL is required</p>}
+          </div>
+
+          {/* Password */}
+          <div className="relative">
+            <label className="block mb-1 text-sm font-medium">Password</label>
+            <input
+              {...register("password", { required: true })}
+              type={showPassword ? "text" : "password"}
+              placeholder="Create a password"
+              className="w-full input input-bordered bg-transparent placeholder:text-white pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-9 text-lg opacity-70 hover:opacity-100"
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+            {errors.password && (
+              <p className="text-red-400 text-sm mt-1">Password is required</p>
+            )}
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="btn w-full bg-[#EA6A12] border-none text-white hover:bg-orange-600 text-lg font-semibold"
           >
-            Register
+            Create Account
           </button>
         </form>
 
-        <p className="text-center text-[#8B4513] text-sm mt-4">
-          Already have an account? 
-          <Link to="/login" className="text-[#C1440E] font-semibold ml-1">
+        {/* Link to Login */}
+        <p className="text-center text-sm mt-6">
+          Already have an account?{" "}
+          <Link to="/login" className="text-[#EA6A12] font-semibold hover:underline">
             Login
           </Link>
         </p>
       </div>
+      <ToastContainer />
     </div>
   );
 };
 
 export default Register;
+
+
 

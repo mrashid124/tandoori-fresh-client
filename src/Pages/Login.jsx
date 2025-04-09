@@ -1,119 +1,138 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../providers/AuthProvider";
+import useAuth from "../Hooks/useAuth";
+import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
+import loginImg from '../assets/Images/loginImg.png'
 
-import { toast, ToastContainer } from "react-toastify";
-import { FcGoogle } from "react-icons/fc";
-import { PiEyeBold, PiEyeSlashFill } from "react-icons/pi";
 
 
 const Login = () => {
-  const { loginUser, googlePopup } = useContext(AuthContext);
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
+  const navigate = useNavigate();
+  const { login, googleSignUP} = useAuth() || {};
+  const [isHide, setIsHide] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const email = form.email.value;
-    const password = form.password.value;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-    if (!email || !password) {
-      toast.error("Please fill all fields.", { position: "top-center" });
-      return;
-    }
+  const handleHide = () => setIsHide(!isHide);
 
-    try {
-      await loginUser(email, password);
-      toast.success("Login successful!", { position: "top-center" });
-      setTimeout(() => navigate(from === "/" ? "/allfoods" : from, { replace: true }), 1000);
-    } catch (err) {
-      toast.error("Login failed. Check your email or password.", { position: "top-center" });
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    try {
-      await googlePopup();
-      toast.success("Logged in with Google!", { position: "top-center" });
-      setTimeout(() => navigate(from === "/" ? "/allfoods" : from, { replace: true }), 1500);
-    } catch (err) {
-      toast.error("Google sign-in failed.", { position: "top-center" });
-    }
-  };
-
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
+  const onSubmit = (data) => {
+    login(data.email, data.password)
+      .then((res) => {
+        console.log(res.user);
+        navigate(location?.state || "/");
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Invalid email or password!",
+        });
+      });
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#FAF3E0] px-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md border border-[#8B4513]">
-        <h2 className="text-[#C1440E] text-3xl font-bold text-center mb-6">
-          Welcome Back
-        </h2>
+    <div
+      className="min-h-screen flex items-center justify-center px-4 text-white"
+      style={{
+        backgroundImage: `linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.6)), url(${loginImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <Helmet>
+        <title>TandooriFresh | Login</title>
+      </Helmet>
 
-        <form onSubmit={handleLogin} className="flex flex-col">
-          <label htmlFor="email" className="text-[#8B4513] font-medium mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter your email"
-            className="p-3 rounded border border-gray-300 focus:ring-2 focus:ring-[#C1440E] w-full"
-          />
+      <div className="w-full max-w-xl p-8 rounded-2xl shadow-2xl backdrop-blur-md bg-white/10">
+        <h2 className="text-3xl font-extrabold mb-2 text-center">Login</h2>
+        <p className="text-sm text-center opacity-80 mb-8">
+          Welcome back! Log in to continue ordering.
+        </p>
 
-          <label htmlFor="password" className="text-[#8B4513] font-medium mt-4 mb-2">
-            Password
-          </label>
-          <div className="relative">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <label className="block mb-1 font-medium text-sm">Email</label>
             <input
-              type={passwordVisible ? "text" : "password"}
-              name="password"
-              id="password"
+              type="email"
+              placeholder="Enter your email"
+              {...register("email", { required: true })}
+              className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 placeholder-white outline-none focus:ring-2 focus:ring-orange-400 transition"
+            />
+            {errors.email && (
+              <p className="text-red-400 text-sm mt-1">Email is required</p>
+            )}
+          </div>
+
+          <div className="relative">
+            <label className="block mb-1 font-medium text-sm">Password</label>
+            <input
+              type={isHide ? "text" : "password"}
               placeholder="Enter your password"
-              className="p-3 rounded border border-gray-300 focus:ring-2 focus:ring-[#C1440E] w-full"
+              {...register("password", { required: true })}
+              className="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 placeholder-white outline-none focus:ring-2 focus:ring-orange-400 transition"
             />
             <button
               type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xl text-gray-700"
+              onClick={handleHide}
+              className="absolute top-9 right-4 text-white hover:text-orange-300"
             >
-              {passwordVisible ? <PiEyeSlashFill /> : <PiEyeBold />}
+              <span className="material-symbols-outlined text-lg">
+                {isHide ? "visibility_off" : "visibility"}
+              </span>
             </button>
+            {errors.password && (
+              <p className="text-red-400 text-sm mt-1">Password is required</p>
+            )}
           </div>
+
+          <p className="text-right text-sm font-medium text-orange-300 hover:underline cursor-pointer">
+            Forgot password?
+          </p>
 
           <button
             type="submit"
-            className="bg-[#C1440E] text-white py-3 rounded-lg font-bold hover:bg-[#A13609] transition duration-300 w-full mt-6"
+            className="w-full py-3 mt-4 rounded-lg bg-orange-500 hover:bg-orange-600 transition font-semibold"
           >
-            Login
+            Log In
           </button>
-
-          <p className="text-[#8B4513] border-t mt-4 pt-3 text-center font-medium">
-            OR LOGIN WITH
-          </p>
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            className="bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-500 transition duration-300 mt-3 flex items-center justify-center gap-2 w-full"
-          >
-            <FcGoogle className="text-2xl" /> Google
-          </button>
-
-          <p className="text-[#8B4513] text-center text-sm mt-4">
-            Don't have an account?{" "}
-            <Link to="/register" className="text-[#C1440E] font-semibold">
-              Register
-            </Link>
-          </p>
         </form>
+
+        <p className="mt-6 text-center text-sm">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-orange-400 font-semibold hover:underline"
+          >
+            Register here
+          </Link>
+        </p>
+
+        <div className="divider text-white mt-8">OR</div>
+
+        <div className="flex justify-center flex-wrap gap-4 mt-6">
+          <button
+            onClick={googleSignUP}
+            className="btn btn-outline text-white hover:bg-orange-500"
+          >
+            <img src="/google.png" alt="Google" className="w-6 h-6 mr-2" />
+            Google
+          </button>
+          {/* <button
+            onClick={githubSignUP}
+            className="btn btn-outline text-white hover:bg-orange-500"
+          >
+            <img src="/github.png" alt="GitHub" className="w-6 h-6 mr-2" />
+            GitHub
+          </button> */}
+        </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };
