@@ -1,7 +1,10 @@
 import React from 'react';
-import Swiper from 'swiper';
+// import Swiper from 'swiper';
+import 'swiper/css/navigation'; 
+
 import { Navigation } from 'swiper/modules';
-import { SwiperSlide } from 'swiper/react';
+import { Swiper,  SwiperSlide } from 'swiper/react';
+import "swiper/css";
 import SlideOne from './SlideOne';
 import SlideTwo from './SlideTwo';
 import SlideThree from './SlideThree';

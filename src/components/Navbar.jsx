@@ -1,7 +1,9 @@
 // import { useContext } from "react";
+
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProvider";
 import useAuth from "../Hooks/useAuth";
+import logo from '../assets/Images/logoImg.jpg';
 
 const Navbar = () => {
     const { user, logOut } = useAuth() || {};
@@ -83,6 +85,9 @@ const Navbar = () => {
                 )}
               </ul>
             </div>
+            <a className="cursor-pointer hover:decoration-neutral normal-case text-lg">
+                        <img className=" w-12  rounded-full" src={logo} alt="logo" />
+                    </a>
             <Link
               to="/"
               className="btn btn-ghost md:text-3xl text-xl font-play text-[#C1440E]"

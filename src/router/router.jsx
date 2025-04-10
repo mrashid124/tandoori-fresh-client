@@ -27,8 +27,8 @@ import AllFoods from "../Pages/AllFoods";
         },
         {
           path: "/allfoods",
-          element: <h2>AllFoods</h2>,
-          // element: <AllFoods></AllFoods>,
+          // element: <h2>AllFoods</h2>,
+          element: <AllFoods></AllFoods>,
         },
         {
           path: "/gallery",

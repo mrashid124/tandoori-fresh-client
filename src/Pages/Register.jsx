@@ -4,9 +4,11 @@ import { useState } from "react";
 // import { Helmet } from "react-helmet-async";
 import regImg from "../assets/Images/loginImg.png"; 
 import useAuth from "../Hooks/useAuth";
-import toast, { ToastContainer } from "react-toastify";
+// import toast, { ToastContainer } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import { Helmet } from "react-helmet";
+import { toast, ToastContainer } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,10 +24,10 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    const { name, email, password, photo } = data;
+    const { name, email, password, photoURL } = data;
     createUserWithEmail(email, password, toast)
       .then(() => {
-        updateUser(name, photo);
+        updateUser(name, photoURL);
         fetch("http://localhost:5000/users", {
           method: "POST",
           headers: { "content-type": "application/json" },
@@ -92,7 +94,7 @@ const Register = () => {
               placeholder="Paste your photo URL"
               className="w-full input input-bordered bg-transparent placeholder:text-white"
             />
-            {errors.photo && <p className="text-red-400 text-sm mt-1">Photo URL is required</p>}
+            {errors.photoURL && <p className="text-red-400 text-sm mt-1">Photo URL is required</p>}
           </div>
 
           {/* Password */}

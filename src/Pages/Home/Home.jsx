@@ -1,11 +1,13 @@
 import React from 'react';
 import Banner from '../../components/Banner';
+import TopFoods from '../../components/TopFoods';
 
 const Home = () => {
     return (
         <div>
-            <h2>Banner</h2>
-            {/* <Banner></Banner> */}
+
+            <Banner></Banner>
+            <TopFoods></TopFoods>
         </div>
     );
 };

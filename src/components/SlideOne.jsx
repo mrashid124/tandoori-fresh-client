@@ -11,7 +11,7 @@ const SlideOne = () => {
                         <h2 className="mb-5 text-4xl font-bold ">Welcome to</h2>
                         <h2 className="mb-5 text-7xl font-bold ">Tandoori Fresh</h2>
                         <p className="mb-5 text-sm">HOME OF THE DELICIOUS FOOD</p>
-                        <Link to='/allfoods'><Button className="btn bg-orange-600 text-white w-full hover:bg-orange-700">Explore Food</Button></Link>
+                        <Link to='/allfoods'  className="btn bg-orange-600 text-white w-full hover:bg-orange-700">Explore Foods</Link>
                     </div>
                 </div>
             </div>

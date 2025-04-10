@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { Helmet } from "react-helmet";
 import loginImg from '../assets/Images/loginImg.png'
-
+import { FcGoogle } from 'react-icons/fc';
+import { PiEyeBold, PiEyeSlashFill } from 'react-icons/pi';
 
 
 const Login = () => {
@@ -84,7 +85,7 @@ const Login = () => {
               className="absolute top-9 right-4 text-white hover:text-orange-300"
             >
               <span className="material-symbols-outlined text-lg">
-                {isHide ? "visibility_off" : "visibility"}
+                {isHide ?  <PiEyeBold /> : <PiEyeSlashFill />}
               </span>
             </button>
             {errors.password && (
@@ -104,7 +105,7 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm">
+        <p className="mt-6 text-center text-md">
           Don't have an account?{" "}
           <Link
             to="/register"
@@ -114,16 +115,19 @@ const Login = () => {
           </Link>
         </p>
 
-        <div className="divider text-white mt-8">OR</div>
+        <div className="divider text-white mt-8">OR LOGIN WITH</div>
 
         <div className="flex justify-center flex-wrap gap-4 mt-6">
-          <button
+        <button type="button" onClick={googleSignUP} className="bg-amber-800 text-white py-2 rounded-lg hover:bg-orange-500 transition duration-300 mt-2 flex items-center justify-center gap-2 w-full">
+              <FcGoogle className="text-2xl" /> Google
+            </button>
+          {/* <button
             onClick={googleSignUP}
             className="btn btn-outline text-white hover:bg-orange-500"
           >
             <img src="/google.png" alt="Google" className="w-6 h-6 mr-2" />
             Google
-          </button>
+          </button> */}
           {/* <button
             onClick={githubSignUP}
             className="btn btn-outline text-white hover:bg-orange-500"
