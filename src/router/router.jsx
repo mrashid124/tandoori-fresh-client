@@ -9,6 +9,7 @@ import Register from "../Pages/Register";
 import MainLayout from "../layout/MainLayout";
 import Navbar from "../components/Navbar";
 import AllFoods from "../Pages/AllFoods";
+import GallerySection from "../Pages/GallerySection";
 
 // import '';
 
@@ -32,7 +33,7 @@ import AllFoods from "../Pages/AllFoods";
         },
         {
           path: "/gallery",
-          element: <h2>Gallery component</h2>,
+          element: <GallerySection></GallerySection>,
         },
         {
           path: "/addfood",
