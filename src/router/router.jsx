@@ -10,6 +10,8 @@ import MainLayout from "../layout/MainLayout";
 import Navbar from "../components/Navbar";
 import AllFoods from "../Pages/AllFoods";
 import GallerySection from "../Pages/GallerySection";
+import UpdatePage from "../components/UpdatePage";
+import FoodDetails from "../Pages/FoodDetails";
 
 // import '';
 
@@ -31,9 +33,15 @@ import GallerySection from "../Pages/GallerySection";
           // element: <h2>AllFoods</h2>,
           element: <AllFoods></AllFoods>,
         },
+
         {
           path: "/gallery",
           element: <GallerySection></GallerySection>,
+        },
+        {
+          path: "/details/:id",
+          element: <FoodDetails></FoodDetails>,
+        
         },
         {
           path: "/addfood",
@@ -42,6 +50,15 @@ import GallerySection from "../Pages/GallerySection";
           // element: (
           //   <PrivetRoute>
           //     <AddFood></AddFood>
+          //   </PrivetRoute>
+          // ),
+        },
+        {
+          path: "/update/:id",
+          element: <UpdatePage></UpdatePage>,
+          // element: (
+          //   <PrivetRoute>
+          //     <UpdateCard></UpdateCard>
           //   </PrivetRoute>
           // ),
         },
